@@ -1,4 +1,4 @@
-service: serverless-discord-lfg-bot
+service: serverless-discord-bot
 
 provider:
   name: aws
@@ -9,22 +9,25 @@ package:
   individually: true
   exclude:
     - node_modules/**
-    - env.json
-    - resources/**
+    - slash-commands/**
+    - pynacl_layer_3_9.zip
+    - README.md
+    - package-lock.json
+    - package.json
 
 functions:
   bot:
     handler: src/handler.main
     timeout: 15
     memorySize: 512
-    events:
-      - http:
-          method: post
-          cors: true
-          path: lfg
-          private: false
+    url: true
+    # events:
+    #   - http:
+    #       method: post
+    #       cors: true
+    #       path: lfg
+    #       private: false
     environment:
-      DYNAMODB_TABLE_NAME: lfg-serverless-bot-dev
       DISCORD_PUBLIC_KEY: e9955e14d08088e478ad1cb8785beb83ab31696fc74c2141cf4c85668de4f325
     layers:
       - arn:aws:lambda:eu-west-2:516399821737:layer:nacl3_9:1
@@ -42,9 +45,9 @@ functions:
 plugins:
   - serverless-iam-roles-per-function
 
-resources:
-  - ${file(resources/dynamodb.yml)}
+# resources:
+#   - ${file(resources/dynamodb.yml)}
 
-custom:
-  account:
-    dev: 516399821737
+# custom:
+#   account:
+#     dev: 516399821737

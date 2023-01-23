@@ -1,7 +1,7 @@
 import json
 import logging
 from re import sub
-from src.utils import dynamo_bot_funcs, discord_funcs
+from src.utils import discord_funcs
 from src.bot_funcs import bot
 
 DISCORD_PING_PONG = {'statusCode': 200, 'body': json.dumps({"type": 1})}
@@ -9,10 +9,7 @@ DISCORD_PING_PONG = {'statusCode': 200, 'body': json.dumps({"type": 1})}
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
-commands = {'lfg': {'create_group': bot.create_group, 'join_group': bot.join_group,
-                   'leave_group': bot.leave_group, 'get_group': bot.get_group, 'get_groups': bot.get_groups, 'get_score': bot.get_teama}}
-                    # 'leave_group': bot.leave_group, 'get_group': bot.get_group, 'get_groups': bot.get_groups}}
-
+commands = {'fa': {'get_score': bot.get_teama}}
 
 def main(event, context):
 
