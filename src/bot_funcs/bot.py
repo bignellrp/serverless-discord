@@ -136,7 +136,7 @@ def update_player(guild_id, body):
         for op in options:
             if op['name'] == 'name':
                 player = op['value']
-            elif op['name'] == 'scorea':
+            elif op['name'] == 'total':
                 total = op['value']
             else:
                 raise Exception(

@@ -58,8 +58,15 @@ def add_player(player,total):
     try:
         player_table.update_item(
             Key={'Name': player},
-            UpdateExpression="set Name=:n, Total=:t, Wins=:w, Draws=:d, Losses=:l, Score=:s, Played=:p, #pc=:pc, #wp=:wp",
+            UpdateExpression="set #n=:n, #t=:t, #w=:w, #d=:d, #l=:l, #s=:s, #p=:p, #pc=:pc, #wp=:wp",
             ExpressionAttributeNames={
+                '#n': 'Name', #Name was a reserved attribute
+                '#t': 'Total',
+                '#w': 'Wins',
+                '#d': 'Draws',
+                '#l': 'Losses',
+                '#s': 'Score',
+                '#p': 'Played',
                 '#pc': 'Percent Calc',
                 '#wp': 'Win Percentage'},
             ExpressionAttributeValues={
@@ -82,7 +89,10 @@ def update_player(player,total):
     try:
         player_table.update_item(
             Key={'Name': player},
-            UpdateExpression="set Name=:n, Total=:t",
+            UpdateExpression="set #n=:n, #t=:t",
+            ExpressionAttributeNames={
+                '#n': 'Name',
+                '#t': 'Total'},
             ExpressionAttributeValues={
                 ':n': player,
                 ':t': total},
