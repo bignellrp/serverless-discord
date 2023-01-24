@@ -4,8 +4,9 @@ from src.utils import get_date
 
 dynamodb = boto3.client('dynamodb')
 results_table = boto3.resource('dynamodb').Table('results_table')
+player_table = boto3.resource('dynamodb').Table('player_table')
 
-def get_teama_dynamo(date):
+def get_teama_total(date):
     try:
         response = dynamodb.get_item(
             Key={
@@ -35,3 +36,67 @@ def update_scorea(value):
         )
     except ClientError as e:
         raise Exception(f'Error adding score: {e}')
+
+def update_score(scorea,scoreb):
+    try:
+        results_table.update_item(   
+            Key={'Date': get_date.next_wednesday},
+            UpdateExpression="set #1=:1, #2=:2",
+            ExpressionAttributeNames={
+                '#1': 'Team A Result?',
+                '#2': 'Team B Result?'},
+            ExpressionAttributeValues={
+                ':1': scorea,
+                ':2': scoreb},
+            ReturnValues="UPDATED_NEW"
+        )
+    except ClientError as e:
+        raise Exception(f'Error adding score: {e}')
+
+def add_player(player,total):
+    '''Adds player to player table'''
+    try:
+        player_table.update_item(
+            Key={'Name': player},
+            UpdateExpression="set Name=:n, Total=:t, Wins=:w, Draws=:d, Losses=:l, Score=:s, Played=:p, #pc=:pc, #wp=:wp",
+            ExpressionAttributeNames={
+                '#pc': 'Percent Calc',
+                '#wp': 'Win Percentage'},
+            ExpressionAttributeValues={
+                ':n': player,
+                ':t': total,
+                ':w': '0',
+                ':d': '0',
+                ':l': '0',
+                ':s': '0',
+                ':p': '0',
+                ':pc': '0',
+                ':wp': '0'},
+            ReturnValues="UPDATED_NEW"
+        )
+    except ClientError as e:
+        raise Exception(f'Error adding player: {e}')
+
+def update_player(player,total):
+    '''Updates players total'''
+    try:
+        player_table.update_item(
+            Key={'Name': player},
+            UpdateExpression="set Name=:n, Total=:t",
+            ExpressionAttributeValues={
+                ':n': player,
+                ':t': total},
+            ReturnValues="UPDATED_NEW"
+        )
+    except ClientError as e:
+        raise Exception(f'Error updating player: {e}')
+
+def remove_player(player):
+    '''Deletes player from player table'''
+    try:
+        player_table.delete_item(
+            Key={'Name': player}
+        )
+    except ClientError as e:
+        raise Exception(f'Error removing player: {e}')
+    return
