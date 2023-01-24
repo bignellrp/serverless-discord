@@ -56,31 +56,20 @@ def update_score(scorea,scoreb):
 def add_player(player,total):
     '''Adds player to player table'''
     try:
-        player_table.update_item(
-            Key={'Name': player},
-            UpdateExpression="set #n=:n, #t=:t, #w=:w, #d=:d, #l=:l, #s=:s, #p=:p, #pc=:pc, #wp=:wp",
-            ExpressionAttributeNames={
-                '#n': 'Name', #Name was a reserved attribute
-                '#t': 'Total',
-                '#w': 'Wins',
-                '#d': 'Draws',
-                '#l': 'Losses',
-                '#s': 'Score',
-                '#p': 'Played',
-                '#pc': 'Percent Calc',
-                '#wp': 'Win Percentage'},
-            ExpressionAttributeValues={
-                ':n': player,
-                ':t': total,
-                ':w': '0',
-                ':d': '0',
-                ':l': '0',
-                ':s': '0',
-                ':p': '0',
-                ':pc': '0',
-                ':wp': '0'},
-            ReturnValues="UPDATED_NEW"
+        player_table.put_item(
+            Item={
+                'Name': player,
+                'Total': total,
+                'Wins': '0',
+                'Draws': '0',
+                'Losses': '0',
+                'Score': '0',
+                'Played': '0',
+                'Percent Calc': '0',
+                'Win Percentage': '0'
+            }
         )
+        return
     except ClientError as e:
         raise Exception(f'Error adding player: {e}')
 
@@ -89,12 +78,10 @@ def update_player(player,total):
     try:
         player_table.update_item(
             Key={'Name': player},
-            UpdateExpression="set #n=:n, #t=:t",
+            UpdateExpression="set #t=:t",
             ExpressionAttributeNames={
-                '#n': 'Name',
                 '#t': 'Total'},
             ExpressionAttributeValues={
-                ':n': player,
                 ':t': total},
             ReturnValues="UPDATED_NEW"
         )
