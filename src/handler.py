@@ -9,7 +9,7 @@ DISCORD_PING_PONG = {'statusCode': 200, 'body': json.dumps({"type": 1})}
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
-commands = {'fa': {'get_score': bot.get_teama}}
+commands = {'fa': {'get_score': bot.get_teama, 'update_scorea': bot.update_scorea}}
 
 def main(event, context):
 

@@ -41,3 +41,24 @@ def get_teama(guild_id, body):
         except Exception as e:
             logger.error(e)
             raise Exception(e)
+
+def update_scorea(guild_id, body):
+        '''Function to update the result using 
+        the values from the results page
+        Takes in value to be added to the table updates item'''
+
+        options = body['data']['options'][0]['options']
+
+        for op in options:
+            if op['name'] == 'scorea':
+                score = op['value']
+            else:
+                raise Exception(
+                    f'{op["value"]} is not a valid option.')
+        try: 
+            message = dynamo_bot_funcs.update_scorea(score)
+            print(message)
+            return f'Updated ScoreA with value: {score}'
+        except Exception as e:
+            logger.error(e)
+            raise Exception(e)

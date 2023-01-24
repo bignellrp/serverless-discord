@@ -17,19 +17,19 @@ json = {
     "name": "fa",
     "description": "FootyAppCommands",
     "options": [
-        # {
-        #     "name": "get_group",
-        #             "description": "Get a group",
-        #             "type": 1,
-        #             "options": [
-        #                 {
-        #                     "name": "name",
-        #                     "description": "Name of the group.",
-        #                     "type": 3,
-        #                     "required": True
-        #                 }
-        #             ]
-        # },
+        {
+            "name": "update_scorea",
+                    "description": "Update Score A",
+                    "type": 1,
+                    "options": [
+                        {
+                            "name": "scorea",
+                            "description": "Score for Team A",
+                            "type": 3,
+                            "required": True
+                        }
+                    ]
+        },
         {
             "name": "get_score",
                     "description": "get_score",
