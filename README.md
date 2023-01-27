@@ -3,12 +3,18 @@
 This is a fully serverless Discord Bot that deploys using the serverless framework and runs in AWS Lambda without needing an API Gateway.
 It uses slash commands to interact with an existing dynamodb table deployed as part of the Serverless Footy app.
 
-https://github.com/bignellrp/serverless-footyapp
+
 
 
 # Prereq:
 1. Install Footapp Web - This has the dynamodb tables needed
+    Here is the Serverless Footy App code:
+    https://github.com/bignellrp/serverless-footyapp
 2. Create a Discord app with slash commands enabled
+    This page helped me set up the discord bot:
+    https://oozio.medium.com/serverless-discord-bot-55f95f26f743
+    Note this page is old and the code needed tweaking so just
+    follow the dicord setup part.
 3. Export the following variables locally
 
 ```

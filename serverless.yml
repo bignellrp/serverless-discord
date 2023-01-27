@@ -21,12 +21,6 @@ functions:
     timeout: 15
     memorySize: 512
     url: true
-    # events:
-    #   - http:
-    #       method: post
-    #       cors: true
-    #       path: lfg
-    #       private: false
     environment:
       DISCORD_PUBLIC_KEY: e9955e14d08088e478ad1cb8785beb83ab31696fc74c2141cf4c85668de4f325
     layers:
@@ -39,15 +33,9 @@ functions:
           - dynamodb:GetItem
           - dynamodb:PutItem
           - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
         Resource:
           - arn:aws:dynamodb:*:516399821737:table/*
 
 plugins:
   - serverless-iam-roles-per-function
-
-# resources:
-#   - ${file(resources/dynamodb.yml)}
-
-# custom:
-#   account:
-#     dev: 516399821737

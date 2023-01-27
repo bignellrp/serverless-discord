@@ -26,7 +26,7 @@ def get_teama_total(date):
 def update_scorea(value):
     try:
         results_table.update_item(   
-            Key={'Date': get_date.next_wednesday},
+            Key={'Date': get_date.closest_wednesday},
             UpdateExpression="set #1=:1",
             ExpressionAttributeNames={
                 '#1': 'Team A Result?'},
@@ -38,16 +38,21 @@ def update_scorea(value):
         raise Exception(f'Error adding score: {e}')
 
 def update_score(scorea,scoreb):
+    '''Adds score to results table
+    if Date is closest wednesday and
+    Team A Result = '-' '''
     try:
-        results_table.update_item(   
-            Key={'Date': get_date.next_wednesday},
+        results_table.update_item(
+            Key={'Date': str(get_date.closest_wednesday)},
             UpdateExpression="set #1=:1, #2=:2",
+            ConditionExpression="#1=:3",
             ExpressionAttributeNames={
                 '#1': 'Team A Result?',
                 '#2': 'Team B Result?'},
             ExpressionAttributeValues={
                 ':1': scorea,
-                ':2': scoreb},
+                ':2': scoreb,
+                ':3': '-'},
             ReturnValues="UPDATED_NEW"
         )
     except ClientError as e:
