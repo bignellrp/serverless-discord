@@ -21,3 +21,6 @@ var/
 src/utils/__pycache__/
 node_modules/
 package*
+
+# Tokens
+tokens.yml

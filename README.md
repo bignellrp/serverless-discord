@@ -31,7 +31,7 @@ export DISCORD_TOKEN=
 ```
 python3 slash-commands/register_commands.py
 ```
-2. Add lambda layer and upload pynacl_layer_3_9.zip with name nacl3_9 (Will add this to the serverless build at some point)
+2. Add lambda layers, see instructions in the appendix for creating the layer zip
 3. Install serverless iam
 ```
 serverless plugin install -n serverless-iam-roles-per-function
@@ -44,3 +44,16 @@ sls deploy
 6. Test a command in discord
 
 If you get a Interation Error or Exception check the lambda logs in CloudWatch
+
+#Appendix
+
+Discord Webhook is used for sending embeds. 
+This requires an additional lambda layer.
+Follow this guide for building the layer.
+Make sure the machine used is Amazon Linux or Ubuntu and has 3.9 install.
+I used a docker called 'ccmpbll/docker-diag-tools' locally to save on
+building an ec2.
+
+https://medium.com/@geoff.ford_33546/creating-a-pynacl-lambda-layer-c3f2e1b6ff11
+
+Discord Webhook Commands found here: https://pypi.org/project/discord-webhook/
