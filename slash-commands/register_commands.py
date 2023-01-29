@@ -18,19 +18,6 @@ json = {
     "description": "FootyAppCommands",
     "options": [
         {
-            "name": "update_scorea",
-                    "description": "Update Score A",
-                    "type": 1,
-                    "options": [
-                        {
-                            "name": "scorea",
-                            "description": "Score for Team A",
-                            "type": 3,
-                            "required": True
-                        }
-                    ]
-        },
-        {
             "name": "update_score",
                     "description": "Update score for Team A and B",
                     "type": 1,
@@ -101,17 +88,9 @@ json = {
                     ]
         },
         {
-            "name": "get_score",
-                    "description": "get_score",
-                    "type": 1,
-                    "options": [
-                        {
-                            "name": "date",
-                            "description": "Date we want",
-                            "type": 3,
-                            "required": True
-                        }
-                    ]
+            "name": "get_lineup",
+                    "description": "Get Lineup for this week",
+                    "type": 1
         }
     ]
 }

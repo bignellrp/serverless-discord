@@ -1,5 +1,5 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
-from src.utils import dynamo_bot_funcs, discord_funcs
+from src.utils import dynamo_bot_funcs, discord_funcs, get_date
 import logging
 import os
 
@@ -14,33 +14,42 @@ print(footyappurl)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
-webhook = DiscordWebhook(url=webhookurl)
 
-def get_teama_total(guild_id, body):
-        """Players on Team A"""
-        options = body['data']['options'][0]['options']
-        for op in options:
-            if op['name'] == 'date':
-                date = op['value']
-            else:
-                raise Exception(
-                    f'{op["value"]} is not a valid option for get_teama.')
 
+def get_lineup(guild_id, body):
+        """Lineup for both teams for this week"""
         try: 
-            scorea = dynamo_bot_funcs.get_teama_total(date)
-            teama = ['Joe', 'Bod', 'Rik', 'Amy', 'Emi']
+            webhook = DiscordWebhook(url=webhookurl)
+            webhook2 = DiscordWebhook(url=webhookurl)
+            date = str(get_date.closest_wednesday)
+            teama,teamb,scorea,scoreb,coloura,colourb = dynamo_bot_funcs.get_teams(date)
             teama = "\n".join(item for item in teama)
-            ##Embed Message
+            teamb = "\n".join(item for item in teamb)
+            
+            ##Embed Message 1
             embed=DiscordEmbed(
                 title="Date: " + date,
                 color='03b2f8'
             )
             embed.add_embed_field(name="Team A", value=teama, inline=True)
-            embed.set_thumbnail(url=f"{footyappurl}teama.png")
+            embed.set_thumbnail(url=f"{footyappurl}{coloura}.png")
             embed.set_footer(text="Team A Score: "+str(scorea))
             webhook.add_embed(embed)
             response = webhook.execute()
-            return f'Loading...'
+
+            ##Embed Message 2
+            embed2=DiscordEmbed(
+                title="Date: " + date,
+                color='03b2f8'
+            )
+            embed2.add_embed_field(name="Team B", value=teamb, inline=True)
+            embed2.set_thumbnail(url=f"{footyappurl}{colourb}.png")
+            embed2.set_footer(text="Team B Score: "+str(scoreb))
+            webhook2.add_embed(embed2)
+            response = webhook2.execute()
+
+            return f'Can I help with anything else??'
+            
         except Exception as e:
             logger.error(e)
             raise Exception(e)

@@ -16,6 +16,7 @@ It uses slash commands to interact with an existing dynamodb table deployed as p
     Note this page is old and the code needed tweaking so just
     follow the dicord setup part.
 3. Export the following variables locally
+4. Create tokens.yml containing webhooktoken: addyourwebhooktokenhere
 
 ```
 export DISCORD_CLIENT_ID=
