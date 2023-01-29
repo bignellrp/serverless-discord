@@ -23,13 +23,13 @@ functions:
     memorySize: 512
     url: true
     environment:
-      DISCORD_PUBLIC_KEY: e9955e14d08088e478ad1cb8785beb83ab31696fc74c2141cf4c85668de4f325
-      DISCORD_WEBHOOK_CHANNELID: 1068600560934191186
+      DISCORD_PUBLIC_KEY: ${file(./tokens.yml):discordpublickey}
+      DISCORD_WEBHOOK_CHANNELID: ${file(./tokens.yml):webhookchannelid}
       DISCORD_WEBHOOK_TOKEN: ${file(./tokens.yml):webhooktoken}
-      FOOTYAPP_URL: https://nrpl2sv57e.execute-api.eu-west-2.amazonaws.com
+      FOOTYAPP_URL: ${file(./tokens.yml):footyappurl}
     layers:
-      - arn:aws:lambda:eu-west-2:516399821737:layer:nacl3_9:1
-      - arn:aws:lambda:eu-west-2:516399821737:layer:discord_webhook:1
+      - arn:aws:lambda:${aws:region}:${aws:accountId}:layer:nacl3_9:1
+      - arn:aws:lambda:${aws:region}:${aws:accountId}:layer:discord_webhook:1
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -40,7 +40,7 @@ functions:
           - dynamodb:UpdateItem
           - dynamodb:DeleteItem
         Resource:
-          - arn:aws:dynamodb:*:516399821737:table/*
+          - arn:aws:dynamodb:*:${aws:accountId}:table/*
 
 plugins:
   - serverless-iam-roles-per-function

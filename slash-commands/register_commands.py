@@ -1,6 +1,15 @@
-##############################################
-# Run this script locally to add bot commands
-##############################################
+#######################################################
+# Run this script locally to add or update bot commands
+#######################################################
+
+# Updating and Deleting a Command
+# Commands can be deleted and updated by making DELETE and PATCH calls to the command endpoint. Those endpoints are
+
+# applications/<my_application_id>/commands/<command_id> for global commands, or
+# applications/<my_application_id>/guilds/<guild_id>/commands/<command_id> for guild commands
+# Because commands have unique names within a type and scope, we treat POST requests for new commands as upserts. 
+# That means making a new command with an already-used name for your application will update the existing command.
+
 import requests
 import os
 
@@ -101,8 +110,3 @@ response = requests.post(url, headers={
 }, json=json)
 
 print(response.json())
-
-# response = requests.delete(url, headers={
-#   "Authorization": f"Bot {DISCORD_TOKEN}"})
-
-# print(response.json())
