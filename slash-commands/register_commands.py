@@ -100,6 +100,11 @@ json = {
             "name": "get_lineup",
                     "description": "Get Lineup for this week",
                     "type": 1
+        },
+        {
+            "name": "get_top10",
+                    "description": "Get Top10",
+                    "type": 1
         }
     ]
 }

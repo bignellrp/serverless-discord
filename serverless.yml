@@ -30,11 +30,13 @@ functions:
     layers:
       - arn:aws:lambda:${aws:region}:${aws:accountId}:layer:nacl3_9:1
       - arn:aws:lambda:${aws:region}:${aws:accountId}:layer:discord_webhook:1
+      - arn:aws:lambda:${aws:region}:${aws:accountId}:layer:pandas:1
     iamRoleStatements:
       - Effect: "Allow"
         Action:
           - dynamodb:DescribeTable
           - dynamodb:Query
+          - dynamodb:Scan
           - dynamodb:GetItem
           - dynamodb:PutItem
           - dynamodb:UpdateItem

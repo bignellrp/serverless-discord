@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import ClientError
-from src.utils import get_date
+from src.utils import get_date, post_stats
 
 dynamodb = boto3.client('dynamodb')
 results_table = boto3.resource('dynamodb').Table('results_table')
@@ -88,23 +88,9 @@ def get_teamb(date):
     except ClientError as e:
         raise Exception(f'Error getting values: {e}')
 
-def update_scorea(value):
-    try:
-        results_table.update_item(   
-            Key={'Date': get_date.closest_wednesday},
-            UpdateExpression="set #1=:1",
-            ExpressionAttributeNames={
-                '#1': 'Team A Result?'},
-            ExpressionAttributeValues={
-                ':1': value},
-            ReturnValues="UPDATED_NEW"
-        )
-    except ClientError as e:
-        raise Exception(f'Error adding score: {e}')
-
 def update_score(scorea,scoreb):
     '''Adds score to results table
-    if Date is closest wednesday and
+    if Date is last wednesday and
     Team A Result = '-' '''
     try:
         results_table.update_item(
@@ -120,6 +106,7 @@ def update_score(scorea,scoreb):
                 ':3': '-'},
             ReturnValues="UPDATED_NEW"
         )
+        response = post_stats.update_formulas()
     except ClientError as e:
         raise Exception(f'Error adding score: {e}')
 
@@ -134,6 +121,7 @@ def add_player(player,total):
                 'Draws': '0',
                 'Losses': '0',
                 'Score': '0',
+                'Playing': 'o',
                 'Played': '0',
                 'Percent Calc': '0',
                 'Win Percentage': '0'

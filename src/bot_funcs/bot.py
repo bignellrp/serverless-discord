@@ -25,7 +25,7 @@ def get_lineup(guild_id, body):
             teama,teamb,scorea,scoreb,coloura,colourb = dynamo_bot_funcs.get_teams(date)
             teama = "\n".join(item for item in teama)
             teamb = "\n".join(item for item in teamb)
-            
+
             ##Embed Message 1
             embed=DiscordEmbed(
                 title="Date: " + date,
@@ -110,7 +110,6 @@ def update_score(guild_id, body):
                     f'{op["value"]} is not a valid option.')
         try: 
             message = dynamo_bot_funcs.update_score(scorea,scoreb)
-            print(message)
             return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
         except Exception as e:
             logger.error(e)
