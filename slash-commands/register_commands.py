@@ -105,6 +105,30 @@ json = {
             "name": "get_top10",
                     "description": "Get Top10",
                     "type": 1
+        },
+        {
+            "name": "get_winpercentage",
+                    "description": "Get Win Percentage",
+                    "type": 1
+        },
+        {
+            "name": "swap_players",
+                    "description": "Swap players",
+                    "type": 1,
+                    "options": [
+                        {
+                            "name": "curplayer",
+                            "description": "Name current player.",
+                            "type": 3,
+                            "required": True
+                        },
+                        {
+                            "name": "newplayer",
+                            "description": "Name of new player",
+                            "type": 3,
+                            "required": True
+                        }
+                    ]
         }
     ]
 }

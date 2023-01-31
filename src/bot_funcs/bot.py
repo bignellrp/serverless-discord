@@ -1,5 +1,5 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
-from src.utils import dynamo_bot_funcs, discord_funcs, get_date
+from src.utils import dynamo_bot_funcs, discord_funcs, get_date, get_data, swap_players
 import logging
 import os
 
@@ -15,6 +15,59 @@ print(footyappurl)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
+def get_top10(guild_id, body):
+    """Get Top10 using player class"""
+    try:
+        webhook = DiscordWebhook(url=webhookurl)
+        players = get_data.player()
+        leaderboard = players.leaderboard()
+        leaderboard = '\n'.join(str(score) 
+                                + " | " 
+                                + name for name,score 
+                                        in leaderboard)
+        # Embed Message
+        embed=DiscordEmbed(
+            title="Top10:",
+            color='03b2f8'
+        )
+        embed.add_embed_field(name="Score | Player", 
+                        value=leaderboard, inline=True)
+        embed.set_thumbnail(url=f"{footyappurl}trophy.png")
+        webhook.add_embed(embed)
+        response = webhook.execute()
+
+        return f'Can I help with anything else??'
+            
+    except Exception as e:
+        logger.error(e)
+        raise Exception(e)
+
+def get_winpercentage(guild_id, body):
+    """Lineup for both teams for this week"""
+    try:
+        webhook = DiscordWebhook(url=webhookurl)
+        players = get_data.player()
+        leaderboard = players.winpercentage()
+        leaderboard = '\n'.join(str(score) 
+                                + " | " 
+                                + name for name,score 
+                                        in leaderboard)
+        # Embed Message
+        embed=DiscordEmbed(
+            title="Win Percentage:",
+            color='03b2f8'
+        )
+        embed.add_embed_field(name="Score | Player", 
+                        value=leaderboard, inline=True)
+        embed.set_thumbnail(url=f"{footyappurl}percent.png")
+        webhook.add_embed(embed)
+        response = webhook.execute()
+
+        return f'Can I help with anything else??'
+            
+    except Exception as e:
+        logger.error(e)
+        raise Exception(e)
 
 def get_lineup(guild_id, body):
         """Lineup for both teams for this week"""
@@ -54,32 +107,52 @@ def get_lineup(guild_id, body):
             logger.error(e)
             raise Exception(e)
 
-def update_scorea(guild_id, body):
-        '''Function to update the result using 
-        the values from the results page
-        Takes in value to be added to the table updates item'''
-
+def swap_player(guild_id, body):
+        '''Swap player function'''
         options = body['data']['options'][0]['options']
 
+        players = get_data.player()
+        player_list = players.player_names()
+        player_list = [pname[0] for pname in player_list]
+        result = get_data.results()
+        teama = result.teama()
+        teamb = result.teamb()
+        teams = teama + teamb
+
         for op in options:
-            if op['name'] == 'scorea':
-                score = op['value']
-                try:
-                    score = int(score)
-                except:
-                    input_type = type(score)
-                    raise Exception(
-                        f'Group size must be an integer, not {input_type}.')
+            if op['name'] == 'curplayer':
+                curplayer = op['value']
+                if curplayer not in player_list:
+                    raise Exception('Player not in the database!')
+                elif curplayer not in teams:
+                    raise Exception('Player not on the list for this week!')
+            elif op['name'] == 'newplayer':
+                newplayer = op['value']
+                if curplayer not in player_list:
+                    raise Exception('Player not in the database!')
             else:
                 raise Exception(
                     f'{op["value"]} is not a valid option.')
-        try: 
-            message = dynamo_bot_funcs.update_scorea(score)
-            print(message)
-            return f'Updated ScoreA with value: {score}'
-        except Exception as e:
-            logger.error(e)
-            raise Exception(e)
+        
+        if all([curplayer in teama, newplayer in teama]):
+            raise Exception('Players are on the same team!')
+        elif all([curplayer in teamb, newplayer in teamb]):
+            raise Exception('Players are on the same team!')
+
+        if newplayer not in teams:
+            try: 
+                message = swap_players.swap_player(curplayer, newplayer)
+                return f'Swapped {curplayer} with {newplayer}.'
+            except Exception as e:
+                logger.error(e)
+                raise Exception(e)
+        else:
+            try: 
+                message = swap_players.swap_existing_player(curplayer, newplayer)
+                return f'Swapped {curplayer} with {newplayer}.'
+            except Exception as e:
+                logger.error(e)
+                raise Exception(e)
 
 def update_score(guild_id, body):
         '''Function to update the result using 
