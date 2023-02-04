@@ -29,13 +29,17 @@ def get_results():
                             'Team B Colour'])
     results_df['Date'] = pd.to_datetime(results_df.Date, 
                                     format='%Y%m%d', errors='ignore')
+    results_df['Team A Result?'] = pd.to_numeric(
+                                    results_df['Team A Result?'])
+    results_df['Team B Result?'] = pd.to_numeric(
+                                    results_df['Team B Result?'])
     return results_df
 
 def calc_wdl(player, df):
     '''Calculate wins,draws,losses for each player
     Where player is on the team and result 
     is WDL based on which team they were on'''
-    #df = results_df
+
     teama = ['Team A Player 1','Team A Player 2','Team A Player 3','Team A Player 4','Team A Player 5']
     teamb = ['Team B Player 1','Team B Player 2','Team B Player 3','Team B Player 4','Team B Player 5']
     wins = 0
@@ -58,6 +62,8 @@ def update_formulas():
     date = str(get_date.closest_wednesday)
     teama,teamb,scorea,scoreb,coloura,colourb = dynamo_bot_funcs.get_teams(date)
     played_thisweek = teama + teamb
+    ##Make sure get_results runs AFTER the scores are updated otherwise it
+    ##will try and convert the '-' into an int which wont end well
     df = get_results()
     for name in played_thisweek:
         calc = calc_wdl(name,df)
