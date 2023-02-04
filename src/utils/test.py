@@ -1,4 +1,4 @@
-from src.utils import dynamo_bot_funcs, discord_funcs, get_date
+#from src.utils import dynamo_bot_funcs, discord_funcs, get_date
 import boto3
 from botocore.exceptions import ClientError
 from dynamo_pandas import get_df
@@ -35,30 +35,42 @@ def calc_wdl(player, df):
     '''Calculate wins,draws,losses for each player
     Where player is on the team and result 
     is WDL based on which team they were on'''
-    #df = results_df
+
     teama = ['Team A Player 1','Team A Player 2','Team A Player 3','Team A Player 4','Team A Player 5']
     teamb = ['Team B Player 1','Team B Player 2','Team B Player 3','Team B Player 4','Team B Player 5']
-    wins = 0
-    draws = 0
-    losses = 0
+
+    tawins = 0
+    tadraws = 0
+    talosses = 0
+    tbwins = 0
+    tbdraws = 0
+    tblosses = 0
 
     for team in teama:
-        wins = wins + df[(df[team] == player) & (df['Team A Result?'] > df['Team B Result?'])].shape[0]
-        draws = draws + df[(df[team] == player) & (df['Team A Result?'] == df['Team B Result?'])].shape[0]
-        losses = losses + df[(df[team] == player) & (df['Team A Result?'] < df['Team B Result?'])].shape[0]
+        tawins = tawins + df[(df[team] == player) & (df['Team A Result?'] > df['Team B Result?'])].shape[0]
+        tadraws = tadraws + df[(df[team] == player) & (df['Team A Result?'] == df['Team B Result?'])].shape[0]
+        talosses = talosses + df[(df[team] == player) & (df['Team A Result?'] < df['Team B Result?'])].shape[0]
 
     for team in teamb:
-        wins = wins + df[(df[team] == player) & (df['Team A Result?'] < df['Team B Result?'])].shape[0]
-        draws = draws + df[(df[team] == player) & (df['Team A Result?'] == df['Team B Result?'])].shape[0]
-        losses = losses + df[(df[team] == player) & (df['Team A Result?'] > df['Team B Result?'])].shape[0]
+        tbwins = tbwins + df[(df[team] == player) & (df['Team A Result?'] < df['Team B Result?'])].shape[0]
+        tbdraws = tbdraws + df[(df[team] == player) & (df['Team A Result?'] == df['Team B Result?'])].shape[0]
+        tblosses = tblosses + df[(df[team] == player) & (df['Team A Result?'] > df['Team B Result?'])].shape[0]
+
+    wins = tawins + tbwins
+    draws = tadraws + tbdraws
+    losses = talosses + tblosses
+
     return wins,draws,losses
 
 def update_formulas():
     '''Updates formulas'''
-    date = str(get_date.closest_wednesday)
-    teama,teamb,scorea,scoreb,coloura,colourb = dynamo_bot_funcs.get_teams(date)
-    played_thisweek = teama + teamb
+    #date = str(get_date.closest_wednesday)
+    date = '2023-02-01'
+    #teama,teamb,scorea,scoreb,coloura,colourb = dynamo_bot_funcs.get_teams(date)
+    #played_thisweek = teama + teamb
+    played_thisweek = ['Pete', 'ChrisT', 'Ferdi', 'Chris', 'James', 'Cal', 'Simon', 'Joe', 'Rik', 'Matt']
     df = get_results()
+    print(df)
     for name in played_thisweek:
         calc = calc_wdl(name,df)
         wins = calc[0]
@@ -92,3 +104,5 @@ def update_formulas():
         except ClientError as e:
             raise Exception(f'Error updating values: {e}')
     return
+
+update_formulas()

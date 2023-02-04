@@ -30,8 +30,8 @@ def get_teams(date):
         teamb.append(response['Item']['Team B Player 4']['S'])
         teamb.append(response['Item']['Team B Player 5']['S'])
 
-        scorea = response['Item']['Team A Total']['N']
-        scoreb = response['Item']['Team B Total']['N']
+        scorea = response['Item']['Team A Total']['S']
+        scoreb = response['Item']['Team B Total']['S']
 
         coloura = response['Item']['Team A Colour']['S']
         colourb = response['Item']['Team B Colour']['S']
@@ -58,7 +58,7 @@ def get_teama(date):
         teama.append(response['Item']['Team A Player 4']['S'])
         teama.append(response['Item']['Team A Player 5']['S'])
 
-        scorea = response['Item']['Team A Total']['N']
+        scorea = response['Item']['Team A Total']['S']
 
         return teama,scorea
     except ClientError as e:
@@ -82,7 +82,7 @@ def get_teamb(date):
         teamb.append(response['Item']['Team B Player 4']['S'])
         teamb.append(response['Item']['Team B Player 5']['S'])
 
-        scoreb = response['Item']['Team B Total']['N']
+        scoreb = response['Item']['Team B Total']['S']
 
         return teamb,scoreb
     except ClientError as e:
