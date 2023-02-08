@@ -8,6 +8,7 @@ player_table = boto3.resource('dynamodb').Table('player_table')
 
 def get_teams(date):
     try:
+        print(f"Getting teams for date: {date}")
         response = dynamodb.get_item(
             Key={
                 'Date': {'S': str(date)}
@@ -29,7 +30,8 @@ def get_teams(date):
         teamb.append(response['Item']['Team B Player 3']['S'])
         teamb.append(response['Item']['Team B Player 4']['S'])
         teamb.append(response['Item']['Team B Player 5']['S'])
-
+        
+        print("Can give error N or S if total field type is wrong")
         scorea = response['Item']['Team A Total']['N']
         scoreb = response['Item']['Team B Total']['N']
 
@@ -42,6 +44,7 @@ def get_teams(date):
 
 def get_teama(date):
     try:
+        print(f"Getting teama for date: {date}")
         response = dynamodb.get_item(
             Key={
                 'Date': {'S': str(date)}
@@ -66,6 +69,7 @@ def get_teama(date):
 
 def get_teamb(date):
     try:
+        print(f"Getting teamb for date: {date}")
         response = dynamodb.get_item(
             Key={
                 'Date': {'S': str(date)}
@@ -93,8 +97,10 @@ def update_score(scorea,scoreb):
     if Date is last wednesday and
     Team A Result = '-' '''
     try:
+        date = str(get_date.closest_wednesday)
+        print(f"Adding scores: {scorea} and {scoreb} for {date}")
         results_table.update_item(
-            Key={'Date': str(get_date.closest_wednesday)},
+            Key={'Date': date},
             UpdateExpression="set #1=:1, #2=:2",
             ConditionExpression="#1=:3",
             ExpressionAttributeNames={
@@ -113,6 +119,7 @@ def update_score(scorea,scoreb):
 def add_player(player,total):
     '''Adds player to player table'''
     try:
+        print(f"Adding {player} with score {total}")
         player_table.put_item(
             Item={
                 'Name': player,
@@ -134,6 +141,7 @@ def add_player(player,total):
 def update_player(player,total):
     '''Updates players total'''
     try:
+        print(f"Updating {player} with score {total}")
         player_table.update_item(
             Key={'Name': player},
             UpdateExpression="set #t=:t",
@@ -149,6 +157,7 @@ def update_player(player,total):
 def remove_player(player):
     '''Deletes player from player table'''
     try:
+        print(f"Removing {player}")
         player_table.delete_item(
             Key={'Name': player}
         )

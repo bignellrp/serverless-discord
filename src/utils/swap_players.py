@@ -1,4 +1,4 @@
-from src.utils.get_date import next_wednesday
+from src.utils.get_date import closest_wednesday
 from src.utils.get_data import player,results
 import boto3
 from botocore.exceptions import ClientError
@@ -13,6 +13,9 @@ def swap_player(player_current,player_new):
     '''Takes in a list of two players
     finds their score and swaps them 
     in the results table'''
+
+    print(f"Swapping players {player_current} for {player_new}")
+
     all_players = player_class.all_players()
     for name, total in all_players:
         if name == player_current:
@@ -54,7 +57,7 @@ def swap_player(player_current,player_new):
     ##using date as the key
     try:
         results_table.update_item(
-            Key={'Date': str(next_wednesday)},
+            Key={'Date': str(closest_wednesday)},
             UpdateExpression="set #1=:1, #2=:2",
             ConditionExpression="#3=:3",
             ExpressionAttributeNames={
@@ -76,6 +79,8 @@ def swap_existing_player(player_current,player_new):
     finds their score and swaps them 
     in the results table if players
     are both playing'''
+
+    print(f"Swapping players {player_current} for {player_new}")
 
     players = player_class.all_players()
     for name, total in players:
@@ -126,7 +131,7 @@ def swap_existing_player(player_current,player_new):
 
     try:
         results_table.update_item(
-            Key={'Date': str(next_wednesday)},
+            Key={'Date': str(closest_wednesday)},
             UpdateExpression="set #1=:1, #2=:2, #4=:4, #5=:5",
             ConditionExpression="#3=:3",
             ExpressionAttributeNames={
