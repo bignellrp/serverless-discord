@@ -182,10 +182,11 @@ def update_score(guild_id, body):
             else:
                 raise Exception(
                     f'{op["value"]} is not a valid option.')
-                    
+
         ## Moved the update score function to a thread as the formulas took
         ## longer than 3 seconds and caused a discord error. This would
         ## need an extra step if the result was needed for the return.
+        ## https://jun711.github.io/aws/aws-lambda-and-multi-threading-in-python/
         with ThreadPoolExecutor(max_workers=4) as executor:
             executor.submit(dynamo_bot_funcs.update_score, scorea=scorea, scoreb=scoreb)
         return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
