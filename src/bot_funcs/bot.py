@@ -2,6 +2,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 from src.utils import dynamo_bot_funcs, discord_funcs, get_date, get_data, swap_players
 import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 #DISCORD_WEBHOOK_CHANNELID = os.environ.get('DISCORD_WEBHOOK_CHANNELID', '')
 DISCORD_WEBHOOK_CHANNELID = '1068600560934191186' #Lambda finding the wrong channelID
@@ -181,12 +182,19 @@ def update_score(guild_id, body):
             else:
                 raise Exception(
                     f'{op["value"]} is not a valid option.')
-        try: 
-            message = dynamo_bot_funcs.update_score(scorea,scoreb)
-            return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
-        except Exception as e:
-            logger.error(e)
-            raise Exception(e)
+                    
+        ## Moved the update score function to a thread as the formulas took
+        ## longer than 3 seconds and caused a discord error. This would
+        ## need an extra step if the result was needed for the return.
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            executor.submit(dynamo_bot_funcs.update_score, scorea=scorea, scoreb=scoreb)
+        return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
+        # try: 
+        #     message = dynamo_bot_funcs.update_score(scorea,scoreb)
+        #     return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
+        # except Exception as e:
+        #     logger.error(e)
+        #     raise Exception(e)
 
 def add_player(guild_id, body):
         '''Function to update the result using 
