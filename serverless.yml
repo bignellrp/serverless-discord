@@ -22,6 +22,13 @@ functions:
     timeout: 15
     memorySize: 512
     url: true
+    ## Uncomment to use API GW instead of direct url
+    # events:
+    #   - http:
+    #       method: post
+    #       cors: true
+    #       path: fa
+    #       private: false
     environment:
       DISCORD_PUBLIC_KEY: ${file(./tokens.yml):discordpublickey}
       DISCORD_WEBHOOK_CHANNELID: ${file(./tokens.yml):webhookchannelid}
