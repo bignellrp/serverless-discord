@@ -134,9 +134,9 @@ def add_player(player,total):
                 'Win Percentage': '0'
             }
         )
-        return
     except ClientError as e:
         raise Exception(f'Error adding player: {e}')
+    return
 
 def update_player(player,total):
     '''Updates players total'''
