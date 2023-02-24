@@ -187,15 +187,15 @@ def update_score(guild_id, body):
         ## longer than 3 seconds and caused a discord error. This would
         ## need an extra step if the result was needed for the return.
         ## https://jun711.github.io/aws/aws-lambda-and-multi-threading-in-python/
-        with ThreadPoolExecutor(max_workers=4) as executor:
-            executor.submit(dynamo_bot_funcs.update_score, scorea=scorea, scoreb=scoreb)
-        return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
-        # try: 
-        #     message = dynamo_bot_funcs.update_score(scorea,scoreb)
-        #     return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
-        # except Exception as e:
-        #     logger.error(e)
-        #     raise Exception(e)
+        # with ThreadPoolExecutor(max_workers=4) as executor:
+        #     executor.submit(dynamo_bot_funcs.update_score, scorea=scorea, scoreb=scoreb)
+        # return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
+        try: 
+            message = dynamo_bot_funcs.update_score(scorea,scoreb)
+            return f'Updated Score as TeamA: {scorea}, TeamB: {scoreb}'
+        except Exception as e:
+            logger.error(e)
+            raise Exception(e)
 
 def add_player(guild_id, body):
         '''Function to update the result using 

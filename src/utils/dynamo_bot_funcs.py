@@ -112,7 +112,7 @@ def update_score(scorea,scoreb):
                 ':3': '-'},
             ReturnValues="UPDATED_NEW"
         )
-        response = post_stats.update_formulas()
+        #response = post_stats.update_formulas()
     except ClientError as e:
         raise Exception(f'Error adding score: {e}')
 
